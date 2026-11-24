@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://esm.sh" />
     <title>KwikKut — Background remover</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="enhancements.css" />
     <script type="importmap">
       {
         "imports": {
@@ -26,6 +27,7 @@
         <span>kwikkut<span class="brand-period">.</span></span>
       </a>
       <div class="topbar-right">
+        <span class="header-credit">Brought to you by the creative minds at <a href="https://gospelco.com.ng" target="_blank" rel="noopener noreferrer">GospelCO</a></span>
         <span class="privacy-note"><span class="privacy-dot"></span> Images stay on your device</span>
         <button class="install-button" id="install-button" type="button" hidden>Install app</button>
       </div>
@@ -49,9 +51,7 @@
 
         <label class="drop-zone" id="drop-zone" for="file-input" tabindex="0">
           <input id="file-input" type="file" accept="image/png,image/jpeg,image/webp,image/avif" />
-          <span class="upload-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14.5v3A2.5 2.5 0 0 0 7.5 20h9a2.5 2.5 0 0 0 2.5-2.5v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
+          <span class="upload-icon" aria-hidden="true">↑</span>
           <span class="drop-title">Drop your image here</span>
           <span class="drop-hint">or <span>browse files</span> from your device</span>
           <span class="size-hint">A clear photo with a well-defined subject works best.</span>
@@ -82,10 +82,12 @@
             <div class="file-info"><span class="file-badge">IMG</span><span id="file-details">Image selected</span></div>
             <div class="button-row">
               <button class="button button-quiet" id="choose-another" type="button">Choose another</button>
+              <button class="button button-quiet" id="clear-button" type="button">Clear</button>
               <button class="button button-primary" id="remove-button" type="button"><span aria-hidden="true">✳</span> Remove background</button>
               <a class="button button-download" id="download-button" hidden download="kwikkut-cutout.png">Download PNG <span aria-hidden="true">↓</span></a>
             </div>
           </div>
+          <p class="saved-status" id="saved-status" role="status" hidden>Cutout saved. You can safely leave this page.</p>
           <p class="error-message" id="error-message" role="alert" hidden></p>
         </div>
 
@@ -99,8 +101,60 @@
         <span class="how-divider" aria-hidden="true"></span>
         <div><span class="how-number">3</span><span><strong>Save your cutout</strong><small>Download as a transparent PNG.</small></span></div>
       </section>
+
+      <section class="feedback-card" aria-labelledby="feedback-title">
+        <div>
+          <p class="eyebrow">WE’RE LISTENING</p>
+          <h2 id="feedback-title">Building &amp; revising KwikKut</h2>
+          <p>We are carefully building and revising KwikKut, and working continuously to make it better. If you have any questions, spot a bug, or want to share feedback, reach out to us at <a href="mailto:hello@gospelco.com.ng">hello@gospelco.com.ng</a> or send us a quick message below.</p>
+        </div>
+        <button class="button button-primary" id="open-feedback" type="button">Send Feedback / Report a Bug</button>
+      </section>
     </main>
 
-    <footer><span>Made for the things you make.</span><span>KWIKKUT © 2026</span></footer>
+    <footer class="site-footer">
+      <span>Made for the things you make. · KWIKKUT © 2026</span>
+      <span>Brought to you by the creative minds at <a href="https://gospelco.com.ng" target="_blank" rel="noopener noreferrer">GospelCO</a></span>
+      <span>Local AI powered by IMG.LY (<a href="https://github.com" target="_blank" rel="noopener noreferrer">@imgly/background-removal, AGPL-3.0</a>)</span>
+    </footer>
+
+    <dialog class="app-dialog" id="unsaved-dialog" aria-labelledby="unsaved-title">
+      <div class="dialog-content">
+        <button class="dialog-close" type="button" data-close-dialog aria-label="Close">×</button>
+        <span class="dialog-icon" aria-hidden="true">!</span>
+        <h2 id="unsaved-title">Your cutout isn’t saved yet</h2>
+        <p>You haven't saved your cutout yet! KwikKut does not store images in memory.</p>
+        <div class="dialog-actions">
+          <button class="button button-quiet" type="button" data-close-dialog>Go back</button>
+          <button class="button button-quiet" id="unsaved-continue" type="button">Continue without saving</button>
+          <button class="button button-primary" id="unsaved-save" type="button">Download cutout</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="app-dialog" id="feedback-dialog" aria-labelledby="feedback-dialog-title">
+      <div class="dialog-content feedback-dialog-content">
+        <button class="dialog-close" type="button" data-close-dialog aria-label="Close">×</button>
+        <p class="eyebrow">YOUR NOTE HELPS</p>
+        <h2 id="feedback-dialog-title">Send feedback or report a bug</h2>
+        <p>Tell us what happened and leave a WhatsApp number so we can follow up.</p>
+        <form class="feedback-form" action="https://formsubmit.co/hello@gospelco.com.ng" method="POST" target="_blank">
+          <input type="hidden" name="_subject" value="KwikKut feedback / bug report" />
+          <input type="hidden" name="_captcha" value="false" />
+          <label for="feedback-name">Your Name <span>(optional)</span></label>
+          <input id="feedback-name" name="name" type="text" autocomplete="name" placeholder="Your name" />
+          <label for="feedback-whatsapp">WhatsApp Number <span class="required-mark">(required)</span></label>
+          <input id="feedback-whatsapp" name="whatsapp_number" type="tel" autocomplete="tel" placeholder="+234 800 000 0000" required />
+          <label for="feedback-message">Message / Bug Details</label>
+          <textarea id="feedback-message" name="message" rows="5" placeholder="What would you like us to know?"></textarea>
+          <button class="button button-primary" type="submit">Send message</button>
+          <small>Messages are delivered to hello@gospelco.com.ng using FormSubmit. If this is your first message, FormSubmit may ask the recipient to activate email delivery.</small>
+        </form>
+      </div>
+    </dialog>
+
+    <script>
+      document.querySelector('#open-feedback').addEventListener('click', () => document.querySelector('#feedback-dialog').showModal());
+    </script>
   </body>
 </html>
