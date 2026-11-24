@@ -1,0 +1,14 @@
+{
+  "name": "KwikKut — Background Remover",
+  "short_name": "KwikKut",
+  "description": "Remove image backgrounds in your browser and save transparent PNGs.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#101510",
+  "theme_color": "#101510",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
